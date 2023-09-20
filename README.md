@@ -2,6 +2,9 @@
 
 A project from Rev Engineering
 
+![image](https://github.com/LeadCrunch/CommandLineGpt/assets/4297223/d7e12cb6-ac11-44f0-a2e8-ab90dc35139d)
+
+
 ## Setup
 
 ### 1. create a virtual environment and install dependencies
