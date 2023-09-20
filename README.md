@@ -35,3 +35,29 @@ python main.py
 ```
 
 Note: there is a current limitation of maintaining a conversation state of 20 messages. This a workaround to avoid the token limit. This means as you chat with the GPT api, it will start "forgetting" messages beyond 20 messages ago. This value can be adjusted in the .env file. In the future I may update this to use actual token counts to avoid hitting the token limit. 
+
+
+## Creating a shell script to run as an alias
+
+Here are some instructions if you want to run this in your terminal without having to cd to the project, create the venv, and run the python script
+
+### 1. create a shell script like the following
+
+```ssh
+#!/bin/bash
+
+# Step 1: Navigate to your project's directory
+cd /path/to/your/project/CommandLineGpt
+
+# Step 2: Activate the virtual environment (however you have your venv setup)
+source env/bin/activate
+
+# Step 3: Run the Python script
+python main.py
+```
+
+### add the alias to your .bashrc or .zshrc
+
+```
+alias chatgpt="/path/to/shell/script/commandlinegpt.sh"
+```
