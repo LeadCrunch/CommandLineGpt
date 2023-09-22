@@ -1,4 +1,4 @@
-from open_ai.llm_api import OpenAiLlmApi, OpenAiLlmOptions, OpenAiChatMessages
+from api.open_ai_llm import OpenAiLlmApi, OpenAiLlmOptions, OpenAiChatMessages
 from entities.conversation import Conversation, UserChatMessage
 from config.main import openai_default_model, openai_default_temperature, openai_max_message_history_length
 from entities.command_line_app import CommandLineApp

@@ -6,7 +6,6 @@ import json
 
 import openai
 
-from entities.llm_api import LlmApi
 from config.main import openai_api_key
 
 openai.api_key = openai_api_key
@@ -65,7 +64,7 @@ class OpenAiChatCompletionResponse:
             self.content = getattr(message, "content", None)
             function_call = getattr(message, "function_call", None)
             self.function_call = (
-                (self.FunctionCall(function_call["name"], function_call["arguments"]))
+                (OpenAiChatCompletionResponse.FunctionCall(function_call["name"], function_call["arguments"]))
                 if function_call
                 else None
             )
@@ -87,7 +86,7 @@ class OpenAiLlmOptions:
         self.temperature = temperature
 
 
-class OpenAiLlmApi(LlmApi):
+class OpenAiLlmApi:
     def __init__(self, options):
         self.options = options
 
@@ -107,4 +106,4 @@ class OpenAiLlmApi(LlmApi):
             functions=functions,
             function_call=function_call,
         )
-        return OpenAiChatCompletionResponse(chat_completion)
+        return OpenAiChatCompletionResponse(chat_completion).choices[0].message.function_call.arguments
