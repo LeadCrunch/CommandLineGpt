@@ -2,8 +2,6 @@
 
 from __future__ import absolute_import, unicode_literals
 
-import json
-
 from entities.conversation import SystemChatMessage, UserChatMessage
 from entities.intention import Intention
 from api.open_ai_llm import OpenAiChatMessages, OpenAiLlmApi, OpenAiLlmOptions
@@ -45,9 +43,9 @@ class GptIntentionDetection:
     def __init__(self, messages, intentions=default_chat_intentions):
         self.messages = messages
         self.intentions = intentions
-        self.llm_api = OpenAiLlmApi(OpenAiLlmOptions("gpt-4-0613", 0))
+        self.llm_api = OpenAiLlmApi(OpenAiLlmOptions("gpt-3.5-turbo-0613", 0))
 
-    def get_intention_of_last_message_using_llm_api(self):
+    def get_intention_of_last_message(self):
         chat_completion_prompt_messages = self._chat_completion_prompt_messages()
 
         function_call_arguments = self.llm_api.get_function_call(
