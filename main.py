@@ -1,5 +1,5 @@
-from open_ai.command_line_chat import OpenAiCommandLineChat
+from open_ai.gpt_chat_command_line_app import GptChatCommandLineApp
 
 
-chat = OpenAiCommandLineChat()
+chat = GptChatCommandLineApp()
 chat.start()
