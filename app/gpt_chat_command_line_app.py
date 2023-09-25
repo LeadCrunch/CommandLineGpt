@@ -1,4 +1,4 @@
-from open_ai.llm_api import OpenAiLlmApi, OpenAiLlmOptions, OpenAiChatMessages
+from api.open_ai_llm import OpenAiLlmApi, OpenAiLlmOptions, OpenAiChatMessages
 from entities.conversation import Conversation, UserChatMessage
 from config.main import openai_default_model, openai_default_temperature, openai_max_message_history_length
 from entities.command_line_app import CommandLineApp
@@ -39,7 +39,7 @@ class GptChatCommandLineApp(CommandLineApp):
     def _get_chat_response_text(self, user_input):
         self.conversation.add_message(UserChatMessage(user_input))
         messages = self.conversation.state.messages
-        chat_response = self.openai_llm_api.get_chat_completion(
+        chat_response = self.openai_llm_api.chat_completion(
             chat_messages=OpenAiChatMessages(messages),
         )
         return chat_response.choices[0].message.content
