@@ -64,7 +64,11 @@ class OpenAiChatCompletionResponse:
             self.content = getattr(message, "content", None)
             function_call = getattr(message, "function_call", None)
             self.function_call = (
-                (OpenAiChatCompletionResponse.FunctionCall(function_call["name"], function_call["arguments"]))
+                (
+                    OpenAiChatCompletionResponse.FunctionCall(
+                        function_call["name"], function_call["arguments"]
+                    )
+                )
                 if function_call
                 else None
             )
@@ -89,16 +93,51 @@ class OpenAiLlmOptions:
 class OpenAiLlmApi:
     def __init__(self, options):
         self.options = options
+        self.collected_response_text = ""
+        self.status = "ready"
 
-    def get_chat_completion(self, chat_messages):
+    def chat_completion(self, chat_messages=None, message=None):
+        self.status = "processing"
+        if message and not chat_messages:
+            chat_messages = OpenAiChatMessages([{"role": "user", "content": message}])
+
         chat_completion = openai.ChatCompletion.create(
             model=self.options.model,
             temperature=self.options.temperature,
             messages=chat_messages.json,
         )
+        self.status = "ready"
         return OpenAiChatCompletionResponse(chat_completion)
 
-    def get_function_call(self, chat_messages, functions, function_call):
+    def stream_chat_completion(self, chat_messages=None, message=None, callback=None):
+        self.status = "processing"
+        if message and not chat_messages:
+            chat_messages = OpenAiChatMessages([{"role": "user", "content": message}])
+
+        response = openai.ChatCompletion.create(
+            messages=chat_messages.json,
+            model=self.options.model,
+            temperature=self.options.temperature,
+            stream=True,
+        )
+
+        collected_events = []
+        completion_text = ""
+
+        for event in response:
+            collected_events.append(event)
+            if event["choices"][0]["finish_reason"] == "stop":
+                self.status = "ready"
+                break
+
+            event_text = event["choices"][0]["delta"]["content"]
+            completion_text += event_text
+            self.collected_response_text += event_text
+            
+            if callback:
+                callback(completion_text)
+
+    def function_call(self, chat_messages, functions, function_call):
         chat_completion = openai.ChatCompletion.create(
             model=self.options.model,
             temperature=self.options.temperature,
@@ -106,4 +145,8 @@ class OpenAiLlmApi:
             functions=functions,
             function_call=function_call,
         )
-        return OpenAiChatCompletionResponse(chat_completion).choices[0].message.function_call.arguments
+        return (
+            OpenAiChatCompletionResponse(chat_completion)
+            .choices[0]
+            .message.function_call.arguments
+        )

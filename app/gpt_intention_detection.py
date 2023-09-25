@@ -48,7 +48,7 @@ class GptIntentionDetection:
     def get_intention_of_last_message(self):
         chat_completion_prompt_messages = self._chat_completion_prompt_messages()
 
-        function_call_arguments = self.llm_api.get_function_call(
+        function_call_arguments = self.llm_api.function_call(
             chat_messages=OpenAiChatMessages(chat_completion_prompt_messages),
             functions=[
                 build_user_intention_function(self.intentions),

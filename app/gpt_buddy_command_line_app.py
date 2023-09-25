@@ -54,7 +54,7 @@ class GptBuddyCommandLineApp(CommandLineApp):
 
     def _get_chat_response_text(self):
         messages = self.conversation.state.messages
-        chat_response = self.openai_llm_api.get_chat_completion(
+        chat_response = self.openai_llm_api.chat_completion(
             chat_messages=OpenAiChatMessages(messages),
         )
         return chat_response.choices[0].message.content
